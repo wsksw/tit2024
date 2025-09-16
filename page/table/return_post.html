@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退回审核帖子</title>
+    <style>
+        body {
+            font-family: "Microsoft Yahei", sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+            height: 120px;
+            resize: vertical;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>退回审核帖子</h2>
+        <form>
+            <div class="form-group">
+                <label for="rejectReason">退回原因</label>
+                <textarea id="rejectReason" placeholder="请输入退回原因，以便用户修改后重新提交"></textarea>
+            </div>
+            <button type="button" class="btn" onclick="rejectPost()">退回帖子</button>
+        </form>
+    </div>
+    <script>
+        function rejectPost() {
+            var postId = document.getElementById('postId').value;
+            var rejectReason = document.getElementById('rejectReason').value;
+
+            if (!postId) {
+                alert('请输入帖子ID');
+                return;
+            }
+            if (!rejectReason) {
+                alert('请输入退回原因');
+                return;
+            }
+
+            // 这里可以添加 AJAX 请求，将退回信息发送到后端
+            alert('帖子ID为 ' + postId + ' 的帖子已退回审核，退回原因：' + rejectReason);
+            // 发送请求示例（实际需根据后端接口调整）
+            /*
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/rejectPost', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert('退回成功');
+                } else if (xhr.readyState === 4) {
+                    alert('退回失败：' + xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify({
+                postId: postId,
+                rejectReason: rejectReason
+            }));
+            */
+        }
+    </script>
+</body>
+</html>

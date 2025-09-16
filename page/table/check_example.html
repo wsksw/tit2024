@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我看见了UFO！- 社区论坛</title>
+  <!-- 引入Layui CSS -->
+  <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+  <!-- 引入Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      background-color: #f2f3f5;
+      padding-top: 15px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    .post-card, .comment-card {
+      background-color: #fff;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .post-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+      line-height: 1.5;
+    }
+    .post-meta {
+      color: #999;
+      font-size: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f2f2f2;
+      margin-bottom: 15px;
+    }
+    .post-meta span {
+      margin-right: 15px;
+    }
+    .post-content {
+      line-height: 1.8;
+      color: #333;
+      font-size: 16px;
+      padding: 10px 0;
+      margin-bottom: 20px;
+    }
+    .post-actions {
+      padding: 10px 0;
+      border-top: 1px solid #f2f2f2;
+      border-bottom: 1px solid #f2f2f2;
+      margin: 15px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .post-actions .action-btn {
+      color: #666;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+    }
+    .post-actions .action-btn:hover {
+      color: #009688;
+      background-color: #f2f2f2;
+    }
+    .post-actions .action-btn i {
+      margin-right: 5px;
+    }
+    .channel-tag {
+      display: inline-block;
+      background-color: #f2f2f2;
+      color: #666;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+    .comment-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .comment-form {
+      margin-bottom: 30px;
+    }
+    .comment-textarea {
+      width: 100%;
+      border: 1px solid #e6e6e6;
+      border-radius: 4px;
+      padding: 10px;
+      min-height: 100px;
+      resize: vertical;
+      outline: none;
+      font-size: 14px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .comment-textarea:focus {
+      border-color: #009688;
+    }
+    .comment-list {
+      margin-top: 20px;
+    }
+    .comment-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .comment-item:last-child {
+      border-bottom: none;
+    }
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .comment-author {
+      font-weight: 500;
+      color: #333;
+      display: flex;
+      align-items: center;
+    }
+    .comment-time {
+      color: #999;
+      font-size: 12px;
+    }
+    .comment-content {
+      color: #333;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .comment-actions {
+      display: flex;
+      font-size: 12px;
+    }
+    .comment-action {
+      color: #999;
+      margin-right: 15px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .comment-action:hover {
+      color: #009688;
+    }
+    .comment-pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .like-count {
+      color: #FF5722;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #009688;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .reply-form {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      padding-left: 50px;
+    }
+    .reply-list {
+      padding-left: 50px;
+      margin-top: 10px;
+    }
+    .reply-item {
+      padding: 10px 0;
+      border-bottom: 1px dashed #f2f2f2;
+    }
+    .reply-item:last-child {
+      border-bottom: none;
+    }
+    .reply-author {
+      color: #009688;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .reply-content {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 5px 0;
+    }
+    .quote-content {
+      background-color: #f9f9f9;
+      border-left: 2px solid #009688;
+      padding: 8px 10px;
+      margin: 10px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    .layui-btn-small {
+      height: 28px;
+      line-height: 28px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 帖子内容卡片 -->
+    <div class="post-card">
+      <h1 class="post-title">我看见了UFO！</h1>
+      
+      <div class="post-meta">
+        <span>
+          <div class="avatar" style="display: inline-block;">U</div>
+          <span>user-0</span>
+        </span>
+        <span><i class="fa fa-clock-o" aria-hidden="true"></i> 2023-06-15 19:30</span>
+        <span><i class="fa fa-eye" aria-hidden="true"></i> 浏览量: 40</span>
+        <span>
+          <i class="fa fa-folder-o" aria-hidden="true"></i> 
+          <span class="channel-tag">频道-0</span>
+          <span class="channel-tag">频道-1</span>
+        </span>
+      </div>
+      
+      <div class="post-content">
+        <p>在114514.2.31的那一天，我正走在回家的路上，天色渐暗，突然，天空中出现了一个散发着奇异光芒的不明飞行物。它的形状很奇特，不像常见的飞机或者其他飞行器，在空中悬浮、移动，那光芒忽明忽暗，还带着一些我从未见过的色彩变化。</p>
+        <p>我赶紧拿出手机想拍照记录，可手忙脚乱间，那UFO似乎察觉到了什么，很快就加速飞走，消失在了云层里。现在回想起来，那场景既震撼又神秘，真希望下次还能有这样奇妙的邂逅，也很想知道有没有其他人也看到了类似的景象。</p>
+      </div>
+      
+      <div class="post-actions">
+        <div>
+          <span class="action-btn" id="likeBtn">
+            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+            <span>点赞</span>
+            <span class="like-count" id="likeCount">12</span>
+          </span>
+          <span class="action-btn" id="collectBtn">
+            <i class="fa fa-star-o" aria-hidden="true"></i>
+            <span>收藏</span>
+          </span>
+          <span class="action-btn" id="shareBtn">
+            <i class="fa fa-share-alt" aria-hidden="true"></i>
+            <span>分享</span>
+          </span>
+        </div>
+        <div>
+          <span class="action-btn" id="reportBtn">
+            <i class="fa fa-flag-o" aria-hidden="true"></i>
+            <span>举报</span>
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 评论区 -->
+    <div class="comment-card">
+      <div class="comment-header">
+        <i class="fa fa-comments-o" aria-hidden="true"></i> 评论 (5)
+      </div>
+      
+      <!-- 发表评论表单 -->
+      <div class="comment-form">
+        <textarea class="comment-textarea" id="commentContent" placeholder="分享你的看法..."></textarea>
+        <button class="layui-btn layui-btn-normal" id="submitComment">发表评论</button>
+      </div>
+      
+      <!-- 评论列表 -->
+      <div class="comment-list">
+        <!-- 评论1 -->
+        <div class="comment-item">
+          <div class="comment-header">
+            <div class="comment-author">
+              <div class="avatar" style="background-color: #1E9FFF;">A</div>
+              <span>user-a</span>
+            </div>
+            <div class="comment-time">2023-06-15 20:15</div>
+          </div>
+          <div class="comment-content">
+            我也看到了！就在城东方向，当时我还以为是我的错觉，没想到真的有人也看到了！那东西飞得特别快，灯光颜色很奇怪。
+          </div>
+          <div class="comment-actions">
+            <span class="comment-action reply-btn" data-id="1">
+              <i class="fa fa-reply" aria-hidden="true"></i> 回复
+            </span>
+            <span class="comment-action like-comment" data-id="1">
+              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 点赞 (3)
+            </span>
+          </div>
+          
+          <!-- 回复列表 -->
+          <div class="reply-list">
+            <div class="reply-item">
+              <div class="comment-header">
+                <div class="comment-author">
+                  <div class="avatar" style="background-color: #009688;">U</div>
+                  <span>user-0</span>
+                </div>
+                <div class="comment-time">2023-06-15 20:30</div>
+              </div>
+              <div class="reply-content">
+                <span class="reply-author">@user-a</span> 真的吗？太巧了！你看到的也是彩色光吗？
+              </div>
+              <div class="comment-actions">
+                <span class="comment-action reply-btn" data-id="1" data-reply-to="user-a">
+                  <i class="fa fa-reply" aria-hidden="true"></i> 回复
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 回复表单 (默认隐藏) -->
+          <div class="reply-form" id="replyForm-1" style="display: none;">
+            <textarea class="comment-textarea" style="min-height: 80px;" id="replyContent-1" placeholder="回复..."></textarea>
+            <button class="layui-btn layui-btn-normal layui-btn-small submit-reply" data-id="1">回复</button>
+            <button class="layui-btn layui-btn-primary layui-btn-small cancel-reply" data-id="1">取消</button>
+          </div>
+        </div>
+        
+        <!-- 评论2 -->
+        <div class="comment-item">
+          <div class="comment-header">
+            <div class="comment-author">
+              <div class="avatar" style="background-color: #FFB800;">B</div>
+              <span>user-b</span>
+            </div>
+            <div class="comment-time">2023-06-15 21:05</div>
+          </div>
+          <div class="comment-content">
+            会不会是无人机或者气象气球之类的？现在很多人玩无人机，灯光效果做得很炫。
+          </div>
+          <div class="comment-actions">
+            <span class="comment-action reply-btn" data-id="2">
+              <i class="fa fa-reply" aria-hidden="true"></i> 回复
+            </span>
+            <span class="comment-action like-comment" data-id="2">
+              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 点赞 (1)
+            </span>
+          </div>
+          
+          <!-- 回复表单 (默认隐藏) -->
+          <div class="reply-form" id="replyForm-2" style="display: none;">
+            <textarea class="comment-textarea" style="min-height: 80px;" id="replyContent-2" placeholder="回复..."></textarea>
+            <button class="layui-btn layui-btn-normal layui-btn-small submit-reply" data-id="2">回复</button>
+            <button class="layui-btn layui-btn-primary layui-btn-small cancel-reply" data-id="2">取消</button>
+          </div>
+        </div>
+        
+        <!-- 评论3 -->
+        <div class="comment-item">
+          <div class="comment-header">
+            <div class="comment-author">
+              <div class="avatar" style="background-color: #FF5722;">C</div>
+              <span>user-c</span>
+            </div>
+            <div class="comment-time">2023-06-16 08:42</div>
+          </div>
+          <div class="comment-content">
+            我以前也见过类似的现象，后来查资料发现可能是某种大气光学现象，不过确实很像UFO。
+          </div>
+          <div class="comment-actions">
+            <span class="comment-action reply-btn" data-id="3">
+              <i class="fa fa-reply" aria-hidden="true"></i> 回复
+            </span>
+            <span class="comment-action like-comment" data-id="3">
+              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 点赞 (0)
+            </span>
+          </div>
+          
+          <!-- 回复表单 (默认隐藏) -->
+          <div class="reply-form" id="replyForm-3" style="display: none;">
+            <textarea class="comment-textarea" style="min-height: 80px;" id="replyContent-3" placeholder="回复..."></textarea>
+            <button class="layui-btn layui-btn-normal layui-btn-small submit-reply" data-id="3">回复</button>
+            <button class="layui-btn layui-btn-primary layui-btn-small cancel-reply" data-id="3">取消</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 评论分页 -->
+      <div class="comment-pagination">
+        <div id="commentPager" style="display: inline-block;"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 引入Layui JS -->
+  <script src="https://cdn.jsdelivr.net/npm/layui-src/dist/layui.js"></script>
+  <script>
+    // 初始化Layui模块
+    layui.use(['form', 'layer', 'laypage'], function() {
+      var form = layui.form;
+      var layer = layui.layer;
+      var laypage = layui.laypage;
+      
+      // 初始化分页
+      laypage.render({
+        elem: 'commentPager',
+        count: 12, // 数据总数
+        limit: 3, // 每页显示条数
+        limits: [3, 5, 10],
+        theme: '#009688',
+        layout: ['prev', 'page', 'next', 'count', 'limit', 'skip'],
+        jump: function(obj, first) {
+          // 首次不执行
+          if (!first) {
+            // 实际应用中这里会根据页码加载对应评论
+            layer.msg('正在加载第 ' + obj.curr + ' 页评论');
+          }
+        }
+      });
+      
+      // 帖子点赞功能
+      var liked = false;
+      document.getElementById('likeBtn').addEventListener('click', function() {
+        var likeCount = document.getElementById('likeCount');
+        var currentCount = parseInt(likeCount.textContent);
+        
+        if (liked) {
+          // 取消点赞
+          likeCount.textContent = currentCount - 1;
+          this.innerHTML = '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span>点赞</span><span class="like-count" id="likeCount">' + (currentCount - 1) + '</span>';
+          layer.msg('已取消点赞');
+        } else {
+          // 点赞
+          likeCount.textContent = currentCount + 1;
+          this.innerHTML = '<i class="fa fa-thumbs-up" aria-hidden="true"></i><span>已点赞</span><span class="like-count" id="likeCount">' + (currentCount + 1) + '</span>';
+          layer.msg('点赞成功');
+        }
+        
+        liked = !liked;
+      });
+      
+      // 收藏功能
+      var collected = false;
+      document.getElementById('collectBtn').addEventListener('click', function() {
+        if (collected) {
+          this.innerHTML = '<i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span>';
+          layer.msg('已取消收藏');
+        } else {
+          this.innerHTML = '<i class="fa fa-star" aria-hidden="true"></i><span>已收藏</span>';
+          layer.msg('收藏成功');
+        }
+        
+        collected = !collected;
+      });
+      
+      // 分享功能
+      document.getElementById('shareBtn').addEventListener('click', function() {
+        layer.open({
+          type: 1,
+          title: '分享帖子',
+          content: `
+            <div style="padding: 20px;">
+              <p style="margin-bottom: 15px;">选择分享方式：</p>
+              <div style="display: flex; justify-content: center; gap: 20px;">
+                <div style="text-align: center; cursor: pointer;">
+                  <i class="fa fa-weixin fa-3x" style="color: #07C160;"></i>
+                  <p style="margin-top: 5px; font-size: 12px;">微信</p>
+                </div>
+                <div style="text-align: center; cursor: pointer;">
+                  <i class="fa fa-qq fa-3x" style="color: #12B7F5;"></i>
+                  <p style="margin-top: 5px; font-size: 12px;">QQ</p>
+                </div>
+                <div style="text-align: center; cursor: pointer;">
+                  <i class="fa fa-link fa-3x" style="color: #666;"></i>
+                  <p style="margin-top: 5px; font-size: 12px;">复制链接</p>
+                </div>
+              </div>
+            </div>
+          `,
+          area: ['300px', 'auto'],
+          shade: 0.3
+        });
+      });
+      
+      // 举报功能
+      document.getElementById('reportBtn').addEventListener('click', function() {
+        layer.prompt({
+          title: '请输入举报原因',
+          formType: 2,
+          area: ['300px', '150px']
+        }, function(value, index, elem) {
+          if (value.trim() === '') {
+            layer.msg('请输入举报原因', {icon: 2});
+            return;
+          }
+          layer.close(index);
+          layer.msg('举报已提交，管理员将尽快处理', {icon: 1});
+        });
+      });
+      
+      // 发表评论
+      document.getElementById('submitComment').addEventListener('click', function() {
+        var content = document.getElementById('commentContent').value.trim();
+        
+        if (content === '') {
+          layer.msg('请输入评论内容', {icon: 2});
+          return;
+        }
+        
+        // 模拟评论提交成功
+        layer.msg('评论发表成功', {icon: 1});
+        document.getElementById('commentContent').value = '';
+        
+        // 实际应用中这里会添加新评论到列表
+      });
+      
+      // 评论点赞
+      document.querySelectorAll('.like-comment').forEach(btn => {
+        btn.addEventListener('click', function() {
+          var id = this.getAttribute('data-id');
+          var likeText = this.innerHTML;
+          var countMatch = likeText.match(/\((\d+)\)/);
+          
+          if (countMatch) {
+            var count = parseInt(countMatch[1]);
+            
+            if (likeText.indexOf('fa-thumbs-o-up') !== -1) {
+              // 点赞
+              this.innerHTML = likeText.replace('fa-thumbs-o-up', 'fa-thumbs-up').replace(`(${count})`, `(${count + 1})`);
+              layer.msg('点赞成功');
+            } else {
+              // 取消点赞
+              this.innerHTML = likeText.replace('fa-thumbs-up', 'fa-thumbs-o-up').replace(`(${count})`, `(${count - 1})`);
+              layer.msg('已取消点赞');
+            }
+          }
+        });
+      });
+      
+      // 回复按钮点击
+      document.querySelectorAll('.reply-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          var id = this.getAttribute('data-id');
+          var replyTo = this.getAttribute('data-reply-to');
+          var replyForm = document.getElementById(`replyForm-${id}`);
+          
+          // 隐藏所有回复表单
+          document.querySelectorAll('.reply-form').forEach(form => {
+            form.style.display = 'none';
+          });
+          
+          // 显示当前回复表单
+          replyForm.style.display = 'block';
+          
+          // 如果是回复特定用户，添加@前缀
+          var replyContent = document.getElementById(`replyContent-${id}`);
+          if (replyTo) {
+            replyContent.value = `@${replyTo} `;
+          } else {
+            replyContent.value = '';
+          }
+          
+          // 聚焦到回复框
+          replyContent.focus();
+        });
+      });
+      
+      // 取消回复
+      document.querySelectorAll('.cancel-reply').forEach(btn => {
+        btn.addEventListener('click', function() {
+          var id = this.getAttribute('data-id');
+          document.getElementById(`replyForm-${id}`).style.display = 'none';
+        });
+      });
+      
+      // 提交回复
+      document.querySelectorAll('.submit-reply').forEach(btn => {
+        btn.addEventListener('click', function() {
+          var id = this.getAttribute('data-id');
+          var content = document.getElementById(`replyContent-${id}`).value.trim();
+          
+          if (content === '') {
+            layer.msg('请输入回复内容', {icon: 2});
+            return;
+          }
+          
+          // 模拟回复提交成功
+          layer.msg('回复成功', {icon: 1});
+          document.getElementById(`replyForm-${id}`).style.display = 'none';
+          document.getElementById(`replyContent-${id}`).value = '';
+          
+          // 实际应用中这里会添加新回复到列表
+        });
+      });
+    });
+  </script>
+</body>
+</html>
